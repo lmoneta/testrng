@@ -46,18 +46,6 @@ struct TRng {
 template <typename REngine>
 REngine * TRng<REngine>::fgEngine = nullptr;
 
-// these are not needed
-// TRng<TRandom>::fgEngine = nullptr;
-// TRng<TRandom3>::fgEngine = nullptr;
-// TRandom2 * tausw_eng = nullptr;
-// TRandom3 * mstw_eng = nullptr;
-// TRandom * generic_eng = nullptr;
-// TRandomMixMax * mixmax_eng = nullptr; 
-// ROOT::Math::MixMaxEngine17 * mixmax17_eng = nullptr;
-// ROOT::Math::MixMaxEngine240 * mixmax240_eng = nullptr;
-// ROOT::Math::MixMaxEngine256 * mixmax256_eng = nullptr;
-// ROOT::Math::StdEngine<std::mt19937_64> * mt_std_eng = nullptr;
-// ROOT::Math::StdEngine<std::ranlux48> * ranlux_std_eng = nullptr;
 
 template<class REngine>
 void TestRng(long nevt, const char * name="Generic") {
@@ -77,11 +65,19 @@ void TestRng(long nevt, const char * name="Generic") {
 }
 
 
-int main(){
+int main(int argc, char **argv){
 
 
    long nevt = 1000000000;   // 10^7 evts
-   //gNevt = nevt;
+
+   TString arg; 
+   for (int i=1 ;  i<argc ; i++) {
+      arg = argv[i] ;
+      if (arg.Contains("-nevt")) {
+         TString nevt_str = arg(arg.First("=")+1,arg.Length());
+         nevt = nevt_str.Atoi();
+      }
+   }
 
    printf(" Test generation time for %g events \n",double(nevt)); 
 

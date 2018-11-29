@@ -60,16 +60,27 @@ REngine * TRng<REngine>::fgEngine = nullptr;
 // ROOT::Math::StdEngine<std::ranlux48> * ranlux_std_eng = nullptr;
 
 bool only_small_crush = false;
+unsigned int seed_value = 0;
 
 template<class REngine>
 void TestRng_BigCrush(const char * name="Generic") {
 
    cout<<"******************************************"<<endl;
    cout<<"Test for " << name << " generator ..."<<endl;
+   cout<<"   using seed = "  << seed_value <<endl;
    cout<<"******************************************"<<endl;
 
+
+   if (seed_value == 0) {
+      // generate a random seed using TRandom123
+      TRandom3 r(0);
+      unsigned long MaxInt = (1UL << 32)-1;
+      seed_value = r.Integer(MaxInt);
+      std::cout << "Actual seed value used is " << seed_value << std::endl;
+   }
+
    
-   TRng<REngine>::SetEngine (111);
+   TRng <REngine>::SetEngine (seed_value);
 
    unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm); 
    //unif01_TimerGenWr(ugen,nevt,true);
@@ -82,32 +93,9 @@ void TestRng_BigCrush(const char * name="Generic") {
 
 }
 
+void run_test(int itype, const char * rng_name) { 
 
-int main(int argc, char **argv)
-{
-   int itype = -1; 
-  // Parse command line arguments
-   TString arg; 
-  for (int i=1 ;  i<argc ; i++) {
-     arg = argv[i] ;
-     arg.ToUpper(); 
-     if (arg.Contains("LCG") || arg.Contains("TRANDOM0"))  itype = 0;
-     if (arg.Contains("TRANDOM1"))  itype = 1;
-     if (arg.Contains("TRANDOM2"))  itype = 2;
-     if (arg.Contains("TRANDOM3"))  itype = 3;
-     if (arg.Contains("MIXMAX"))  itype = 4;
-     if (arg.Contains("MIXMAX17"))  itype = 5;
-     if (arg.Contains("MIXMAX256"))  itype = 6;
-     if (arg.Contains("MIXMAX256"))  itype = 6;
-     if (arg.Contains("MT19937"))  itype = 7;
-
-     if (arg.Contains("SMALL")) only_small_crush = true; 
-
-  }
-
-   //gNevt = nevt;
-
-     std::cout <<  "Test generator " << arg << std::endl;
+   std::cout <<  "Test generator " << rng_name << std::endl;
 
    // test TRandom (LCG)
    switch (itype) {
@@ -136,11 +124,53 @@ int main(int argc, char **argv)
    case 7: 
       TestRng_BigCrush<ROOT::Math::StdEngine<std::mt19937_64>>("Mersenne-Twister 64 from std");
       break;
+   case 8: 
+      TestRng_BigCrush<ROOT::Math::StdEngine<std::ranlux48>>("Ranlux48 from std");
+      break;
    default:
       TestRng_BigCrush<TRandomMixMax>("TRandomMixMax (MixMax240)");
       break;
    }
-   
+
+}
+
+int main(int argc, char **argv)
+{
+   std::vector<TString> genNames = {"TRANDOM0","TRANDOM1","TRANDOM2","TRANDOM3",
+                                    "MIXMAX","MIXMAX17","MIXMAX256","MT19937","RANLUX48"};
+   int itype = -1;
+   bool run_all = false; 
+   // Parse command line arguments
+   TString arg; 
+   for (int i=1 ;  i<argc ; i++) {
+      arg = argv[i] ;
+      arg.ToUpper();
+      if (arg.Contains("-SMALL")) {
+         only_small_crush = true;
+         continue;
+      }
+      if (arg.Contains("-ALL")) {
+         run_all=true;
+         continue;
+      }
+      if (arg.Contains("-SEED")) {
+         TString seed_str = arg(arg.First("=")+1,arg.Length());
+         int seed = seed_str.Atoi();
+         seed_value = seed;
+      }
+      for (size_t i = 0; i < genNames.size(); ++i) {
+         if (arg.Contains(genNames[i]))  itype = i;
+         if (arg.Contains("LCG"))  itype = 0;      
+      }
+   }
+
+   if (!run_all) run_test(itype, genNames[itype]);
+   else {
+      for (size_t i = 0; i < genNames.size(); ++i) {
+         run_test(i,genNames[i]);
+      }
+   }
+
    return 0;
 
 }
