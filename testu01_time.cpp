@@ -6,6 +6,7 @@
 #include "Math/MixMaxEngine.h"
 #include "Math/MersenneTwisterEngine.h"
 #include <TMath.h>
+#include "TSysten.h"
 
 #include <iostream>
 #include <cmath>
@@ -79,7 +80,14 @@ int main(int argc, char **argv){
       }
    }
 
-   printf(" Test generation time for %g events \n",double(nevt)); 
+   printf(" Test generation time for %g events \n",double(nevt));
+
+   // get system info
+   SysInfo_t sys_info;
+   gSystem->GetSysInfo(&sys_info);
+   std::cout << " CPU type used for this test\n";
+   std::cout << sys_info.fModel << " type " << sys_info.fCpuType << " @ " << sys_info.fCpuSpeed << std::endl;
+   std::cout << "number of available cores = " << sys_info.fCpus << std::endl;
 
    // test TRandom (LCG)
    TestRng<TRandom>(nevt,"TRandom (LCG)");
