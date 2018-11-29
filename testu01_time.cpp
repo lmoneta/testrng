@@ -6,7 +6,7 @@
 #include "Math/MixMaxEngine.h"
 #include "Math/MersenneTwisterEngine.h"
 #include <TMath.h>
-#include "TSysten.h"
+#include "TSystem.h"
 
 #include <iostream>
 #include <cmath>
@@ -86,7 +86,7 @@ int main(int argc, char **argv){
    SysInfo_t sys_info;
    gSystem->GetSysInfo(&sys_info);
    std::cout << " CPU type used for this test\n";
-   std::cout << sys_info.fModel << " type " << sys_info.fCpuType << " @ " << sys_info.fCpuSpeed << std::endl;
+   std::cout << sys_info.fModel << " type " << sys_info.fCpuType << " @ " << sys_info.fCpuSpeed << " MHz " << std::endl;
    std::cout << "number of available cores = " << sys_info.fCpus << std::endl;
 
    // test TRandom (LCG)
