@@ -72,15 +72,17 @@ void Build() {
 
    // build now ROOT test program 
    TString testProgram = "testu01_time";
-   TString testProgram_src = testProgram + ".cpp"; 
-   cmd = TString::Format("g++ -O2 `root-config --cflags --libs` -L%s -ltestu01 -lprobdist -lmylib %s -o %s",
-                         dirName.Data(),testProgram_src.Data(),testProgram.Data() );
+   TString testProgram_src = testProgram + ".cpp";
+   TString libDirName = dirName + "/lib";
+   TString incDirName = dirName + "/include";
+   cmd = TString::Format("g++ -O2 -I%s `root-config --cflags --libs` -L%s -ltestu01 -lprobdist -lmylib %s -o %s",
+                         incDirName.Data(),libDirName.Data(),testProgram_src.Data(),testProgram.Data() );
    gSystem->Exec(cmd);
 
    testProgram = "testu01_bigcrush";
-   testProgram_src = testProgram + ".cpp"; 
-   cmd = TString::Format("g++ -O2 `root-config --cflags --libs` -L%s -ltestu01 -lprobdist -lmylib %s -o %s",
-                         dirName.Data(),testProgram_src.Data(),testProgram.Data() );
+   testProgram_src = testProgram + ".cpp";
+   cmd = TString::Format("g++ -O2 -I%s `root-config --cflags --libs` -L%s -ltestu01 -lprobdist -lmylib %s -o %s",
+                         incDirName.Data(),libDirName.Data(),testProgram_src.Data(),testProgram.Data() );
    gSystem->Exec(cmd);
 
 
