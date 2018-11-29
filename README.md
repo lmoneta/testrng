@@ -1,7 +1,7 @@
 # Test of Random Numbers Generator
 
-This repository provides test programs for testing ROOT based Pseudo-random number generators using the TestU01 suite 
-(see [http://simul.iro.umontreal.ca/testu01/tu01.html] )
+This repository provides test programs for testing ROOT based Pseudo-random number generators using the **TestU01** suite 
+from  P. L'Ecuyer and R. Simard (see http://simul.iro.umontreal.ca/testu01/tu01.html )
 
 It provides a utility macro to build the test program installing and building first the testU01 package and then 
 it compiles the test program. 
