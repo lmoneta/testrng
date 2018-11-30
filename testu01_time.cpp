@@ -34,7 +34,7 @@ struct TRng {
       if (fgEngine) delete fgEngine;
       fgEngine = nullptr;
    }
-   static void SetEngine(int seed = 0) {
+   static void SetEngine(int seed = 0, int lux = 0) {
       if (fgEngine) delete fgEngine; 
       fgEngine = new REngine(); 
       fgEngine->SetSeed(seed);
@@ -44,6 +44,70 @@ struct TRng {
    }
    static REngine * fgEngine; 
 };
+// specialization for Ranlux for setting luxury level
+template<>
+struct TRng<TRandom1> {
+   typedef TRandom1 REngine; 
+   ~TRng() {
+      if (fgEngine) delete fgEngine;
+      fgEngine = nullptr;
+   }
+   static void SetEngine(int seed = 0, int lux = 3) {
+      if (fgEngine) delete fgEngine;
+      if (lux < 0) lux = 3;   // default value
+      std::cout << "Create ranlux engine with luxury level " << lux << std::endl;
+      fgEngine = new REngine(seed,lux); 
+      fgEngine->SetSeed(seed);
+   }
+   static double Rndm() {
+      return fgEngine->Rndm(); 
+   }
+   static REngine * fgEngine; 
+};
+
+template<>
+struct TRng<ROOT::Math::RanLuxSEngine> {
+   typedef ROOT::Math::RanLuxSEngine REngine; 
+
+   ~TRng() {
+      if (fgEngine) delete fgEngine;
+      fgEngine = nullptr;
+   }
+   static void SetEngine(int seed = 0, int lux = 1) {
+      if (fgEngine) delete fgEngine;
+       if (lux < 0) lux = 1;   // default value
+      std::cout << "Create ranlux engine with luxury level " << lux << std::endl;
+      fgEngine = new REngine(seed,lux); 
+      fgEngine->SetSeed(seed);
+   }
+   static double Rndm() {
+      return fgEngine->Rndm(); 
+   }
+   static REngine * fgEngine; 
+};
+
+template<>
+struct TRng<ROOT::Math::RanLuxDEngine> {
+
+   typedef ROOT::Math::RanLuxDEngine REngine; 
+
+   ~TRng() {
+      if (fgEngine) delete fgEngine;
+      fgEngine = nullptr;
+   }
+   static void SetEngine(int seed = 0, int lux = 1) {
+      if (fgEngine) delete fgEngine;
+       if (lux < 0) lux = 1;   // default value
+      std::cout << "Create ranlux engine with luxury level " << lux << std::endl;
+      fgEngine = new REngine(seed,lux); 
+      fgEngine->SetSeed(seed);
+   }
+   static double Rndm() {
+      return fgEngine->Rndm(); 
+   }
+   static REngine * fgEngine; 
+};
+
 
 template <typename REngine>
 REngine * TRng<REngine>::fgEngine = nullptr;
@@ -52,14 +116,20 @@ int seed  =0;
 
 
 template<class REngine>
-void TestRng(long nevt, const char * name="Generic") {
+void TestRng(long nevt, const char * name="Generic", int lux = -1) {
 
    cout<<"******************************************"<<endl;
    cout<<"Test for " << name << " generator ..."<<endl;
    cout<<"******************************************"<<endl;
 
+   if (seed == 0) {
+      // generate random seed
+      TRandom3 r(0);
+      unsigned long MaxInt = (1UL << 31)-1;
+      seed  = r.Integer(MaxInt);
+   }
    
-   TRng<REngine>::SetEngine (seed);
+   TRng<REngine>::SetEngine (seed, lux);
 
    unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm); 
    unif01_TimerGenWr(ugen,nevt,true); 
@@ -101,10 +171,16 @@ int main(int argc, char **argv){
    TestRng<ROOT::Math::MixMaxEngine17>(nevt,"MixMax 17");
    TestRng<ROOT::Math::MixMaxEngine256>(nevt,"MixMax 256");
    TestRng<ROOT::Math::StdEngine<std::mt19937_64>>(nevt,"Mersenne-Twister 64 from std");
-   TestRng<TRandom1>(0.1*nevt,"TRandom1 (RanLux)");
-   seed = 111;
-   TestRng<ROOT::Math::RanLuxSEngine>(nevt,"New Ranlux24 version");
-   TestRng<ROOT::Math::RanLuxDEngine>(nevt,"New Ranlux48 version");
+
+   TestRng<TRandom1>(0.1*nevt,"TRandom1 (RanLux)",3);
+   TestRng<TRandom1>(0.1*nevt,"TRandom1 (RanLux) luxury=4",4);
+
+   TestRng<ROOT::Math::RanLuxSEngine>(nevt,"New Ranlux24 version lux = 0",0);
+   TestRng<ROOT::Math::RanLuxSEngine>(nevt,"New Ranlux24 version lux = 1",1);
+   TestRng<ROOT::Math::RanLuxSEngine>(nevt,"New Ranlux24 version lux = 2",2);
+   TestRng<ROOT::Math::RanLuxDEngine>(nevt,"New Ranlux48 version (lux=1)",1);
+   TestRng<ROOT::Math::RanLuxDEngine>(nevt,"New Ranlux48 version (lux=2)",2);
+
    TestRng<ROOT::Math::StdEngine<std::ranlux48>>(0.1*nevt,"RanLux 48 from std");
 
 
