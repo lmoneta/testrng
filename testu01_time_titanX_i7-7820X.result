@@ -1,0 +1,153 @@
+ Test generation time for 1e+09 events 
+ CPU type used for this test
+Intel(R) Core(TM) i7-7820X CPU @ 3.60GHz type Intel(R) @ 1200 MHz 
+number of available cores = 16
+******************************************
+Test for TRandom (LCG) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   TRandom (LCG)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   2.64 sec
+
+******************************************
+Test for TRandom3 (Mersenne-Twister) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   TRandom3 (Mersenne-Twister)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   2.91 sec
+
+******************************************
+Test for TRandom2 (Tausworth) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   TRandom2 (Tausworth)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   3.07 sec
+
+******************************************
+Test for TRandomMixMax (MixMax240) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   TRandomMixMax (MixMax240)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   5.64 sec
+
+******************************************
+Test for MixMax 240 generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   MixMax 240
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   6.05 sec
+
+******************************************
+Test for MixMax 17 generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   MixMax 17
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   6.42 sec
+
+******************************************
+Test for MixMax 256 generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   MixMax 256
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  14.79 sec
+
+******************************************
+Test for Mersenne-Twister 64 from std generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   Mersenne-Twister 64 from std
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   9.01 sec
+
+******************************************
+Test for TRandom1 (RanLux) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   TRandom1 (RanLux)
+ Method:      GetU01
+ Number of calls:  100000000
+ Total CPU time:   5.52 sec
+
+******************************************
+Test for New Ranlux24 version generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   New Ranlux24 version
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  13.62 sec
+
+******************************************
+Test for New Ranlux48 version generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   New Ranlux48 version
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  23.35 sec
+
+******************************************
+Test for RanLux 48 from std generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   RanLux 48 from std
+ Method:      GetU01
+ Number of calls:  100000000
+ Total CPU time:  17.10 sec
+
+
+***************************************************
+ CPU type used for this test
+Intel(R) Core(TM) i7-7820X CPU @ 3.60GHz type Intel(R) @ 1200 MHz 
+number of available cores = 16
