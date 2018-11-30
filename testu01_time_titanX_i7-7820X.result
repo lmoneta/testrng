@@ -1,6 +1,6 @@
  Test generation time for 1e+09 events 
  CPU type used for this test
-Intel(R) Core(TM) i7-7820X CPU @ 3.60GHz type Intel(R) @ 1200 MHz 
+Intel(R) Core(TM) i7-7820X CPU @ 3.60GHz type Intel(R) @ 1199 MHz 
 number of available cores = 16
 ******************************************
 Test for TRandom (LCG) generator ...
@@ -36,7 +36,7 @@ Test for TRandom2 (Tausworth) generator ...
  Generator:   TRandom2 (Tausworth)
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:   3.07 sec
+ Total CPU time:   3.15 sec
 
 ******************************************
 Test for TRandomMixMax (MixMax240) generator ...
@@ -48,7 +48,7 @@ Test for TRandomMixMax (MixMax240) generator ...
  Generator:   TRandomMixMax (MixMax240)
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:   5.64 sec
+ Total CPU time:   5.78 sec
 
 ******************************************
 Test for MixMax 240 generator ...
@@ -60,7 +60,7 @@ Test for MixMax 240 generator ...
  Generator:   MixMax 240
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:   6.05 sec
+ Total CPU time:   6.27 sec
 
 ******************************************
 Test for MixMax 17 generator ...
@@ -72,7 +72,7 @@ Test for MixMax 17 generator ...
  Generator:   MixMax 17
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:   6.42 sec
+ Total CPU time:   6.41 sec
 
 ******************************************
 Test for MixMax 256 generator ...
@@ -84,7 +84,7 @@ Test for MixMax 256 generator ...
  Generator:   MixMax 256
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:  14.79 sec
+ Total CPU time:  14.84 sec
 
 ******************************************
 Test for Mersenne-Twister 64 from std generator ...
@@ -96,11 +96,12 @@ Test for Mersenne-Twister 64 from std generator ...
  Generator:   Mersenne-Twister 64 from std
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:   9.01 sec
+ Total CPU time:   8.98 sec
 
 ******************************************
 Test for TRandom1 (RanLux) generator ...
 ******************************************
+Create ranlux engine with luxury level 3
 
 -------------  Results of speed test  ---------------
 
@@ -108,31 +109,85 @@ Test for TRandom1 (RanLux) generator ...
  Generator:   TRandom1 (RanLux)
  Method:      GetU01
  Number of calls:  100000000
- Total CPU time:   5.52 sec
+ Total CPU time:   5.43 sec
 
 ******************************************
-Test for New Ranlux24 version generator ...
+Test for TRandom1 (RanLux) luxury=4 generator ...
 ******************************************
+Create ranlux engine with luxury level 4
 
 -------------  Results of speed test  ---------------
 
  Host:        titanx, Linux
- Generator:   New Ranlux24 version
+ Generator:   TRandom1 (RanLux) luxury=4
  Method:      GetU01
- Number of calls:  1000000000
- Total CPU time:  13.62 sec
+ Number of calls:  100000000
+ Total CPU time:   5.54 sec
 
 ******************************************
-Test for New Ranlux48 version generator ...
+Test for New Ranlux24 version lux = 0 generator ...
 ******************************************
+Create ranlux engine with luxury level 0
 
 -------------  Results of speed test  ---------------
 
  Host:        titanx, Linux
- Generator:   New Ranlux48 version
+ Generator:   New Ranlux24 version lux = 0
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:  23.35 sec
+ Total CPU time:   9.45 sec
+
+******************************************
+Test for New Ranlux24 version lux = 1 generator ...
+******************************************
+Create ranlux engine with luxury level 1
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   New Ranlux24 version lux = 1
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  13.67 sec
+
+******************************************
+Test for New Ranlux24 version lux = 2 generator ...
+******************************************
+Create ranlux engine with luxury level 2
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   New Ranlux24 version lux = 2
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  22.65 sec
+
+******************************************
+Test for New Ranlux48 version (lux=1) generator ...
+******************************************
+Create ranlux engine with luxury level 1
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   New Ranlux48 version (lux=1)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  23.81 sec
+
+******************************************
+Test for New Ranlux48 version (lux=2) generator ...
+******************************************
+Create ranlux engine with luxury level 2
+
+-------------  Results of speed test  ---------------
+
+ Host:        titanx, Linux
+ Generator:   New Ranlux48 version (lux=2)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  41.94 sec
 
 ******************************************
 Test for RanLux 48 from std generator ...
@@ -144,10 +199,10 @@ Test for RanLux 48 from std generator ...
  Generator:   RanLux 48 from std
  Method:      GetU01
  Number of calls:  100000000
- Total CPU time:  17.10 sec
+ Total CPU time:  19.24 sec
 
 
 ***************************************************
  CPU type used for this test
-Intel(R) Core(TM) i7-7820X CPU @ 3.60GHz type Intel(R) @ 1200 MHz 
+Intel(R) Core(TM) i7-7820X CPU @ 3.60GHz type Intel(R) @ 1199 MHz 
 number of available cores = 16
