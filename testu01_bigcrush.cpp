@@ -75,7 +75,8 @@ void TestRng_BigCrush(const char * name="Generic") {
    if (seed_value == 0) {
       // generate a random seed using TRandom123
       TRandom3 r(0);
-      unsigned long MaxInt = (1UL << 32)-1;
+      // use 2^31-1 for ranlux
+      unsigned long MaxInt = (1UL << 31)-1;
       seed_value = r.Integer(MaxInt);
       std::cout << "Actual seed value used is " << seed_value << std::endl;
    }
