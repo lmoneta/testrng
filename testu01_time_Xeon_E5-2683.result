@@ -1,6 +1,6 @@
  Test generation time for 1e+09 events 
  CPU type used for this test
-Intel(R) Xeon(R) CPU E5-2683 v3 @ 2.00GHz type x86_64 @ 1200 MHz 
+Intel(R) Xeon(R) CPU E5-2683 v3 @ 2.00GHz type x86_64 @ 1204 MHz 
 number of available cores = 56
 ******************************************
 Test for TRandom (LCG) generator ...
@@ -12,7 +12,7 @@ Test for TRandom (LCG) generator ...
  Generator:   TRandom (LCG)
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:   3.90 sec
+ Total CPU time:   3.94 sec
 
 ******************************************
 Test for TRandom3 (Mersenne-Twister) generator ...
@@ -24,7 +24,7 @@ Test for TRandom3 (Mersenne-Twister) generator ...
  Generator:   TRandom3 (Mersenne-Twister)
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:   4.81 sec
+ Total CPU time:   5.50 sec
 
 ******************************************
 Test for TRandom2 (Tausworth) generator ...
@@ -36,7 +36,7 @@ Test for TRandom2 (Tausworth) generator ...
  Generator:   TRandom2 (Tausworth)
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:   5.05 sec
+ Total CPU time:   5.10 sec
 
 ******************************************
 Test for TRandomMixMax (MixMax240) generator ...
@@ -48,7 +48,7 @@ Test for TRandomMixMax (MixMax240) generator ...
  Generator:   TRandomMixMax (MixMax240)
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:   8.53 sec
+ Total CPU time:   8.63 sec
 
 ******************************************
 Test for MixMax 240 generator ...
@@ -60,7 +60,7 @@ Test for MixMax 240 generator ...
  Generator:   MixMax 240
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:   8.87 sec
+ Total CPU time:   8.94 sec
 
 ******************************************
 Test for MixMax 17 generator ...
@@ -72,7 +72,7 @@ Test for MixMax 17 generator ...
  Generator:   MixMax 17
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:   9.87 sec
+ Total CPU time:   9.98 sec
 
 ******************************************
 Test for MixMax 256 generator ...
@@ -84,7 +84,7 @@ Test for MixMax 256 generator ...
  Generator:   MixMax 256
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:  18.77 sec
+ Total CPU time:  18.95 sec
 
 ******************************************
 Test for Mersenne-Twister 64 from std generator ...
@@ -96,11 +96,12 @@ Test for Mersenne-Twister 64 from std generator ...
  Generator:   Mersenne-Twister 64 from std
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:  13.40 sec
+ Total CPU time:  13.60 sec
 
 ******************************************
 Test for TRandom1 (RanLux) generator ...
 ******************************************
+Create ranlux engine with luxury level 3
 
 -------------  Results of speed test  ---------------
 
@@ -108,31 +109,85 @@ Test for TRandom1 (RanLux) generator ...
  Generator:   TRandom1 (RanLux)
  Method:      GetU01
  Number of calls:  100000000
- Total CPU time:   7.67 sec
+ Total CPU time:   8.38 sec
 
 ******************************************
-Test for New Ranlux24 version generator ...
+Test for TRandom1 (RanLux) luxury=4 generator ...
 ******************************************
+Create ranlux engine with luxury level 4
 
 -------------  Results of speed test  ---------------
 
  Host:        olhswep13.cern.ch, Linux
- Generator:   New Ranlux24 version
+ Generator:   TRandom1 (RanLux) luxury=4
  Method:      GetU01
- Number of calls:  1000000000
- Total CPU time:  25.47 sec
+ Number of calls:  100000000
+ Total CPU time:   7.74 sec
 
 ******************************************
-Test for New Ranlux48 version generator ...
+Test for New Ranlux24 version lux = 0 generator ...
 ******************************************
+Create ranlux engine with luxury level 0
 
 -------------  Results of speed test  ---------------
 
  Host:        olhswep13.cern.ch, Linux
- Generator:   New Ranlux48 version
+ Generator:   New Ranlux24 version lux = 0
  Method:      GetU01
  Number of calls:  1000000000
- Total CPU time:  38.96 sec
+ Total CPU time:  14.30 sec
+
+******************************************
+Test for New Ranlux24 version lux = 1 generator ...
+******************************************
+Create ranlux engine with luxury level 1
+
+-------------  Results of speed test  ---------------
+
+ Host:        olhswep13.cern.ch, Linux
+ Generator:   New Ranlux24 version lux = 1
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  21.46 sec
+
+******************************************
+Test for New Ranlux24 version lux = 2 generator ...
+******************************************
+Create ranlux engine with luxury level 2
+
+-------------  Results of speed test  ---------------
+
+ Host:        olhswep13.cern.ch, Linux
+ Generator:   New Ranlux24 version lux = 2
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  36.41 sec
+
+******************************************
+Test for New Ranlux48 version (lux=1) generator ...
+******************************************
+Create ranlux engine with luxury level 1
+
+-------------  Results of speed test  ---------------
+
+ Host:        olhswep13.cern.ch, Linux
+ Generator:   New Ranlux48 version (lux=1)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  37.69 sec
+
+******************************************
+Test for New Ranlux48 version (lux=2) generator ...
+******************************************
+Create ranlux engine with luxury level 2
+
+-------------  Results of speed test  ---------------
+
+ Host:        olhswep13.cern.ch, Linux
+ Generator:   New Ranlux48 version (lux=2)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  67.48 sec
 
 ******************************************
 Test for RanLux 48 from std generator ...
@@ -144,10 +199,10 @@ Test for RanLux 48 from std generator ...
  Generator:   RanLux 48 from std
  Method:      GetU01
  Number of calls:  100000000
- Total CPU time:  28.08 sec
+ Total CPU time:  26.55 sec
 
 
 ***************************************************
  CPU type used for this test
-Intel(R) Xeon(R) CPU E5-2683 v3 @ 2.00GHz type x86_64 @ 1200 MHz 
+Intel(R) Xeon(R) CPU E5-2683 v3 @ 2.00GHz type x86_64 @ 1204 MHz 
 number of available cores = 56
