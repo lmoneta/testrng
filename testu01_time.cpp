@@ -21,96 +21,12 @@ extern "C" {
   #include "bbattery.h"
 }
 
+#include "TRng.h"
+
 using namespace std;
 
 //#define Nstreams 1
 
-
-// wrapper class for ROOT Rng
-template<class REngine>
-struct TRng {
-
-   ~TRng() {
-      if (fgEngine) delete fgEngine;
-      fgEngine = nullptr;
-   }
-   static void SetEngine(int seed = 0, int lux = 0) {
-      if (fgEngine) delete fgEngine; 
-      fgEngine = new REngine(); 
-      fgEngine->SetSeed(seed);
-   }
-   static double Rndm() {
-      return fgEngine->Rndm(); 
-   }
-   static REngine * fgEngine; 
-};
-// specialization for Ranlux for setting luxury level
-template<>
-struct TRng<TRandom1> {
-   typedef TRandom1 REngine; 
-   ~TRng() {
-      if (fgEngine) delete fgEngine;
-      fgEngine = nullptr;
-   }
-   static void SetEngine(int seed = 0, int lux = 3) {
-      if (fgEngine) delete fgEngine;
-      if (lux < 0) lux = 3;   // default value
-      std::cout << "Create ranlux engine with luxury level " << lux << std::endl;
-      fgEngine = new REngine(seed,lux); 
-      fgEngine->SetSeed(seed);
-   }
-   static double Rndm() {
-      return fgEngine->Rndm(); 
-   }
-   static REngine * fgEngine; 
-};
-
-template<>
-struct TRng<ROOT::Math::RanLuxSEngine> {
-   typedef ROOT::Math::RanLuxSEngine REngine; 
-
-   ~TRng() {
-      if (fgEngine) delete fgEngine;
-      fgEngine = nullptr;
-   }
-   static void SetEngine(int seed = 0, int lux = 1) {
-      if (fgEngine) delete fgEngine;
-       if (lux < 0) lux = 1;   // default value
-      std::cout << "Create ranlux engine with luxury level " << lux << std::endl;
-      fgEngine = new REngine(seed,lux); 
-      fgEngine->SetSeed(seed);
-   }
-   static double Rndm() {
-      return fgEngine->Rndm(); 
-   }
-   static REngine * fgEngine; 
-};
-
-template<>
-struct TRng<ROOT::Math::RanLuxDEngine> {
-
-   typedef ROOT::Math::RanLuxDEngine REngine; 
-
-   ~TRng() {
-      if (fgEngine) delete fgEngine;
-      fgEngine = nullptr;
-   }
-   static void SetEngine(int seed = 0, int lux = 1) {
-      if (fgEngine) delete fgEngine;
-       if (lux < 0) lux = 1;   // default value
-      std::cout << "Create ranlux engine with luxury level " << lux << std::endl;
-      fgEngine = new REngine(seed,lux); 
-      fgEngine->SetSeed(seed);
-   }
-   static double Rndm() {
-      return fgEngine->Rndm(); 
-   }
-   static REngine * fgEngine; 
-};
-
-
-template <typename REngine>
-REngine * TRng<REngine>::fgEngine = nullptr;
 
 int seed  =0;
 

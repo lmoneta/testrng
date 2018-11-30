@@ -13,6 +13,9 @@
 #include <ctime>
 #include <cstdlib>
 
+// wrapper class defining free functions which can be
+// used by testu01
+#include "TRng.h"
 
 extern "C" {
   #include "gdef.h"
@@ -20,51 +23,16 @@ extern "C" {
   #include "bbattery.h"
 }
 
+
 using namespace std;
 
 //#define Nstreams 1
-
-
-// wrapper class for ROOT Rng
-template<class REngine>
-struct TRng {
-
-   ~TRng() {
-      if (fgEngine) delete fgEngine;
-      fgEngine = nullptr;
-   }
-   static void SetEngine(int seed = 0) {
-      if (fgEngine) delete fgEngine; 
-      fgEngine = new REngine(); 
-      fgEngine->SetSeed(seed);
-   }
-   static double Rndm() {
-      return fgEngine->Rndm(); 
-   }
-   static REngine * fgEngine; 
-};
-
-template <typename REngine>
-REngine * TRng<REngine>::fgEngine = nullptr;
-
-// these are not needed
-// TRng<TRandom>::fgEngine = nullptr;
-// TRng<TRandom3>::fgEngine = nullptr;
-// TRandom2 * tausw_eng = nullptr;
-// TRandom3 * mstw_eng = nullptr;
-// TRandom * generic_eng = nullptr;
-// TRandomMixMax * mixmax_eng = nullptr; 
-// ROOT::Math::MixMaxEngine17 * mixmax17_eng = nullptr;
-// ROOT::Math::MixMaxEngine240 * mixmax240_eng = nullptr;
-// ROOT::Math::MixMaxEngine256 * mixmax256_eng = nullptr;
-// ROOT::Math::StdEngine<std::mt19937_64> * mt_std_eng = nullptr;
-// ROOT::Math::StdEngine<std::ranlux48> * ranlux_std_eng = nullptr;
 
 bool only_small_crush = false;
 unsigned int seed_value = 0;
 
 template<class REngine>
-void TestRng_BigCrush(const char * name="Generic") {
+void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
 
    cout<<"******************************************"<<endl;
    cout<<"Test for " << name << " generator ..."<<endl;
@@ -82,7 +50,7 @@ void TestRng_BigCrush(const char * name="Generic") {
    }
 
    
-   TRng <REngine>::SetEngine (seed_value);
+   TRng <REngine>::SetEngine (seed_value, luxlevel);
 
    unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm); 
    //unif01_TimerGenWr(ugen,nevt,true);
@@ -130,10 +98,19 @@ void run_test(int itype, const char * rng_name) {
       TestRng_BigCrush<ROOT::Math::StdEngine<std::ranlux48>>("Ranlux48 from std");
       break;
    case 9: 
-      TestRng_BigCrush<ROOT::Math::RanLuxSEngine>("New Ranlux24 version");
+      TestRng_BigCrush<ROOT::Math::RanLuxSEngine>("New Ranlux24 version (Lx=1)",1);
       break;
    case 10:
-      TestRng_BigCrush<ROOT::Math::RanLuxDEngine>("New Ranlux48 version");
+      TestRng_BigCrush<ROOT::Math::RanLuxDEngine>("New Ranlux48 version (Lx=1)",1);
+      break;
+   case 11: 
+      TestRng_BigCrush<ROOT::Math::RanLuxSEngine>("New Ranlux24 version (Lx=0)",0);
+      break;
+   case 12: 
+      TestRng_BigCrush<ROOT::Math::RanLuxSEngine>("New Ranlux24 version (Lx=2)",2);
+      break;
+   case 13:
+      TestRng_BigCrush<ROOT::Math::RanLuxDEngine>("New Ranlux48 version (Lx=2)",2);
       break;
    default:
       TestRng_BigCrush<TRandomMixMax>("TRandomMixMax (MixMax240)");
@@ -145,7 +122,8 @@ void run_test(int itype, const char * rng_name) {
 int main(int argc, char **argv)
 {
    std::vector<TString> genNames = {"TRANDOM0","TRANDOM1","TRANDOM2","TRANDOM3",
-                                    "MIXMAX","MIXMAX17","MIXMAX256","MT19937","RANLUX48","RANLUXS","RANLUXD"};
+                                    "MIXMAX","MIXMAX17","MIXMAX256","MT19937","RANLUX48",
+                                    "RANLUXS","RANLUXD","RANLUXS0","RANLUXS2","RANLUXD2"};
    int itype = -1;
    bool run_all = false; 
    // Parse command line arguments
