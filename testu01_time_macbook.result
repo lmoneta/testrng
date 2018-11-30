@@ -1,0 +1,148 @@
+ Test generation time for 1e+09 events 
+ CPU type used for this test
+MacBookPro13,3 type x86_64h @ 2600 MHz 
+number of available cores = 8
+******************************************
+Test for TRandom (LCG) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        maclm17.local, Darwin
+ Generator:   TRandom (LCG)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   3.97 sec
+
+******************************************
+Test for TRandom3 (Mersenne-Twister) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        maclm17.local, Darwin
+ Generator:   TRandom3 (Mersenne-Twister)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   5.15 sec
+
+******************************************
+Test for TRandom2 (Tausworth) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        maclm17.local, Darwin
+ Generator:   TRandom2 (Tausworth)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   4.95 sec
+
+******************************************
+Test for TRandomMixMax (MixMax240) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        maclm17.local, Darwin
+ Generator:   TRandomMixMax (MixMax240)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   7.20 sec
+
+******************************************
+Test for MixMax 240 generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        maclm17.local, Darwin
+ Generator:   MixMax 240
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   6.18 sec
+
+******************************************
+Test for MixMax 17 generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        maclm17.local, Darwin
+ Generator:   MixMax 17
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   6.23 sec
+
+******************************************
+Test for MixMax 256 generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        maclm17.local, Darwin
+ Generator:   MixMax 256
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  10.95 sec
+
+******************************************
+Test for Mersenne-Twister 64 from std generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        maclm17.local, Darwin
+ Generator:   Mersenne-Twister 64 from std
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   9.35 sec
+
+******************************************
+Test for TRandom1 (RanLux) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        maclm17.local, Darwin
+ Generator:   TRandom1 (RanLux)
+ Method:      GetU01
+ Number of calls:  100000000
+ Total CPU time:   7.53 sec
+
+******************************************
+Test for New Ranlux24 version generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        maclm17.local, Darwin
+ Generator:   New Ranlux24 version
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  11.41 sec
+
+******************************************
+Test for New Ranlux48 version generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        maclm17.local, Darwin
+ Generator:   New Ranlux48 version
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  18.53 sec
+
+******************************************
+Test for RanLux 48 from std generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        maclm17.local, Darwin
+ Generator:   RanLux 48 from std
+ Method:      GetU01
+ Number of calls:  100000000
+ Total CPU time:  25.37 sec
+
