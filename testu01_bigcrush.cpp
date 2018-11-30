@@ -6,6 +6,7 @@
 #include "Math/MixMaxEngine.h"
 #include "Math/MersenneTwisterEngine.h"
 #include <TMath.h>
+#include "Math/RanLuxEngine.h"
 
 #include <iostream>
 #include <cmath>
@@ -21,7 +22,7 @@ extern "C" {
 
 using namespace std;
 
-#define Nstreams 1
+//#define Nstreams 1
 
 
 // wrapper class for ROOT Rng
@@ -127,6 +128,12 @@ void run_test(int itype, const char * rng_name) {
    case 8: 
       TestRng_BigCrush<ROOT::Math::StdEngine<std::ranlux48>>("Ranlux48 from std");
       break;
+   case 9: 
+      TestRng_BigCrush<ROOT::Math::RanLuxSEngine>("New Ranlux24 version");
+      break;
+   case 10:
+      TestRng_BigCrush<ROOT::Math::RanLuxDEngine>("New Ranlux48 version");
+      break;
    default:
       TestRng_BigCrush<TRandomMixMax>("TRandomMixMax (MixMax240)");
       break;
@@ -137,7 +144,7 @@ void run_test(int itype, const char * rng_name) {
 int main(int argc, char **argv)
 {
    std::vector<TString> genNames = {"TRANDOM0","TRANDOM1","TRANDOM2","TRANDOM3",
-                                    "MIXMAX","MIXMAX17","MIXMAX256","MT19937","RANLUX48"};
+                                    "MIXMAX","MIXMAX17","MIXMAX256","MT19937","RANLUX48","RANLUXS","RANLUXD"};
    int itype = -1;
    bool run_all = false; 
    // Parse command line arguments

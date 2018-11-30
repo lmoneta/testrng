@@ -5,6 +5,7 @@
 #include <TRandomGen.h>
 #include "Math/MixMaxEngine.h"
 #include "Math/MersenneTwisterEngine.h"
+#include "Math/RanLuxEngine.h"
 #include <TMath.h>
 #include "TSystem.h"
 
@@ -47,6 +48,8 @@ struct TRng {
 template <typename REngine>
 REngine * TRng<REngine>::fgEngine = nullptr;
 
+int seed  =0;
+
 
 template<class REngine>
 void TestRng(long nevt, const char * name="Generic") {
@@ -56,7 +59,7 @@ void TestRng(long nevt, const char * name="Generic") {
    cout<<"******************************************"<<endl;
 
    
-   TRng<REngine>::SetEngine ();
+   TRng<REngine>::SetEngine (seed);
 
    unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm); 
    unif01_TimerGenWr(ugen,nevt,true); 
@@ -99,6 +102,9 @@ int main(int argc, char **argv){
    TestRng<ROOT::Math::MixMaxEngine256>(nevt,"MixMax 256");
    TestRng<ROOT::Math::StdEngine<std::mt19937_64>>(nevt,"Mersenne-Twister 64 from std");
    TestRng<TRandom1>(0.1*nevt,"TRandom1 (RanLux)");
+   seed = 111;
+   TestRng<ROOT::Math::RanLuxSEngine>(nevt,"New Ranlux24 version");
+   TestRng<ROOT::Math::RanLuxDEngine>(nevt,"New Ranlux48 version");
    TestRng<ROOT::Math::StdEngine<std::ranlux48>>(0.1*nevt,"RanLux 48 from std");
 
    return 0;
