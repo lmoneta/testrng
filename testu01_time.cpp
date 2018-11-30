@@ -23,7 +23,7 @@ extern "C" {
 
 using namespace std;
 
-#define Nstreams 1
+//#define Nstreams 1
 
 
 // wrapper class for ROOT Rng
@@ -106,6 +106,13 @@ int main(int argc, char **argv){
    TestRng<ROOT::Math::RanLuxSEngine>(nevt,"New Ranlux24 version");
    TestRng<ROOT::Math::RanLuxDEngine>(nevt,"New Ranlux48 version");
    TestRng<ROOT::Math::StdEngine<std::ranlux48>>(0.1*nevt,"RanLux 48 from std");
+
+
+   gSystem->GetSysInfo(&sys_info);
+   std::cout << "\n***************************************************\n";
+   std::cout << " CPU type used for this test\n";
+   std::cout << sys_info.fModel << " type " << sys_info.fCpuType << " @ " << sys_info.fCpuSpeed << " MHz " << std::endl;
+   std::cout << "number of available cores = " << sys_info.fCpus << std::endl;
 
    return 0;
 
