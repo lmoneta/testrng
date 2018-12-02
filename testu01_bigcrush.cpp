@@ -30,6 +30,7 @@ using namespace std;
 
 bool only_small_crush = false;
 unsigned int seed_value = 0;
+int test_number = -1; 
 
 template<class REngine>
 void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
@@ -55,9 +56,18 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
    unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm); 
    //unif01_TimerGenWr(ugen,nevt,true);
 
-   bbattery_SmallCrush (ugen);
-   if (!only_small_crush)  bbattery_BigCrush (ugen);
+   // run a single test
+   if (test_number > 0) {
+      std::vector<int> vtest_numbers(110);
+      vtest_numbers[test_number]=1;
+      bbattery_RepeatBigCrush (ugen, vtest_numbers.data());      
+   }
+   // run all tests 
+   else { 
+      bbattery_SmallCrush (ugen);
+      if (!only_small_crush)  bbattery_BigCrush (ugen);
 
+   }
 
    unif01_DeleteExternGen01 (ugen);
 
@@ -143,6 +153,11 @@ int main(int argc, char **argv)
          TString seed_str = arg(arg.First("=")+1,arg.Length());
          int seed = seed_str.Atoi();
          seed_value = seed;
+      }
+      if (arg.Contains("-TEST")) {
+         TString number_str = arg(arg.First("=")+1,arg.Length());
+         int number = number_str.Atoi();
+         test_number = number;
       }
       for (size_t i = 0; i < genNames.size(); ++i) {
          if (arg.Contains(genNames[i]))  itype = i;
