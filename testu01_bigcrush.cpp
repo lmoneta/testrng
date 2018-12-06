@@ -18,9 +18,14 @@
 #include "TRng.h"
 
 extern "C" {
-  #include "gdef.h"
-  #include "unif01.h"
-  #include "bbattery.h"
+
+#include "gdef.h"
+#include "unif01.h"
+#include "bbattery.h"
+
+// specific tests
+#include "snpair.h"
+   
 }
 
 
@@ -30,7 +35,8 @@ using namespace std;
 
 bool only_small_crush = false;
 unsigned int seed_value = 0;
-int test_number = -1; 
+int test_number = -1;
+bool run_snpair = false; 
 
 template<class REngine>
 void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
@@ -55,6 +61,31 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
 
    unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm); 
    //unif01_TimerGenWr(ugen,nevt,true);
+
+
+   // run specific tests given by name
+   if (run_snpair) {
+
+      // define parameters for snpair test
+      snpair_Res *  sres = snpair_CreateRes ();
+
+      // apply the test
+      long N =  10;
+      long n = 1000000;
+      int r =  0;
+      int t = 10;
+      int p = 0;
+      int m = 40;//  Torus =  TRUE
+         
+      snpair_ClosePairs (ugen, sres, N, n, r, t, p, m);
+      //snpair_WriteResultCP(ugen,sres, N, n, r, t, p, m, true);
+
+      snpair_ClosePairsBitMatch (ugen, sres, N, n, r, t);
+      
+      snpair_DeleteRes (sres); 
+      unif01_DeleteExternGen01 (ugen);
+      return;
+   }
 
    // run a single test
    if (test_number > 0) {
@@ -122,6 +153,12 @@ void run_test(int itype, const char * rng_name) {
    case 13:
       TestRng_BigCrush<ROOT::Math::RanLuxDEngine>("New Ranlux48 version (Lx=2)",2);
       break;
+   case 14:
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<8,0>>("MiMaxEngine 8 skip 0");
+      break;      
+   case 15:
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<10,0>>("MiMaxEngine 10 skip 0");
+      break;      
    default:
       TestRng_BigCrush<TRandomMixMax>("TRandomMixMax (MixMax240)");
       break;
@@ -133,7 +170,8 @@ int main(int argc, char **argv)
 {
    std::vector<TString> genNames = {"TRANDOM0","TRANDOM1","TRANDOM2","TRANDOM3",
                                     "MIXMAX","MIXMAX17","MIXMAX256","MT19937","RANLUX48",
-                                    "RANLUXS","RANLUXD","RANLUXS0","RANLUXS2","RANLUXD2"};
+                                    "RANLUXS","RANLUXD","RANLUXS0","RANLUXS2","RANLUXD2",
+                                    "MIXMAX8","MIXMAX10"};
    int itype = -1;
    bool run_all = false; 
    // Parse command line arguments
@@ -158,6 +196,11 @@ int main(int argc, char **argv)
          TString number_str = arg(arg.First("=")+1,arg.Length());
          int number = number_str.Atoi();
          test_number = number;
+      }
+      if (arg.Contains("-NAME")) {  // run dedicated test specified by the name
+         TString testName = arg(arg.First("=")+1,arg.Length());
+         testName.ToLower();
+         if (testName.Contains("snpair")) run_snpair = true; 
       }
       for (size_t i = 0; i < genNames.size(); ++i) {
          if (arg.Contains(genNames[i]))  itype = i;
