@@ -17,10 +17,21 @@ struct TRng {
       fgEngine = new REngine(); 
       fgEngine->SetSeed(seed);
    }
+   static void SetMaxEvt(int n) {
+      fgMaxEvt = n;
+      fgCounter = 0;
+   }
    static double Rndm() {
       return fgEngine->Rndm(); 
    }
-   static REngine * fgEngine; 
+   static double Rndm2() {
+      if (fgCounter % fgMaxEvt == 0) fgEngine->SetSeed( fgCounter);
+      fgCounter++;
+      return fgEngine->Rndm(); 
+   }
+   static REngine * fgEngine;
+   static uint64_t fgCounter;
+   static uint64_t fgMaxEvt;
 };
 
 
@@ -100,5 +111,14 @@ REngine * TRng<REngine>::fgEngine = nullptr;
 TRandom1 * TRng<TRandom1>::fgEngine = nullptr;
 ROOT::Math::RanLuxSEngine * TRng<ROOT::Math::RanLuxSEngine>::fgEngine = nullptr;
 ROOT::Math::RanLuxDEngine * TRng<ROOT::Math::RanLuxDEngine>::fgEngine = nullptr;
+
+// uint64_t TRng<REngine>::fgCounter = 0;
+// TRandom1 * TRng<TRandom1>::fgEngine = nullptr;
+template <typename REngine>
+uint64_t TRng<REngine>::fgCounter = 0;
+template <typename REngine>
+uint64_t TRng<REngine>::fgMaxEvt = 100000000000000;
+// uint64_tTRng<ROOT::Math::RanLuxSEngine>::fgCounter = 0;
+// uint64_t TRng<ROOT::Math::RanLuxDEngine>::fgCounter = 0;
 
 #endif

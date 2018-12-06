@@ -46,9 +46,11 @@ void TestRng(long nevt, const char * name="Generic", int lux = -1) {
    }
    
    TRng<REngine>::SetEngine (seed, lux);
-
-   unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm); 
-   unif01_TimerGenWr(ugen,nevt,true); 
+ 
+//   unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm);
+   TRng<REngine>::SetMaxEvt(1);
+   unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm2); 
+  unif01_TimerGenWr(ugen,nevt,true); 
 
    unif01_DeleteExternGen01 (ugen);
 
@@ -58,7 +60,7 @@ void TestRng(long nevt, const char * name="Generic", int lux = -1) {
 int main(int argc, char **argv){
 
 
-   long nevt = 1000000000;   // 10^7 evts
+   long nevt = 1000000;   // 10^7 evts
 
    TString arg; 
    for (int i=1 ;  i<argc ; i++) {
@@ -86,8 +88,10 @@ int main(int argc, char **argv){
    TestRng<ROOT::Math::MixMaxEngine240>(nevt,"MixMax 240");
    TestRng<ROOT::Math::MixMaxEngine17>(nevt,"MixMax 17");
    TestRng<ROOT::Math::MixMaxEngine256>(nevt,"MixMax 256");
+   //TestRng<ROOT::Math::MixMaxEngine<10,7>>(nevt,"MixMax 10 skip 7");
+   
    TestRng<ROOT::Math::StdEngine<std::mt19937_64>>(nevt,"Mersenne-Twister 64 from std");
-
+#if 0
    TestRng<TRandom1>(0.1*nevt,"TRandom1 (RanLux)",3);
    TestRng<TRandom1>(0.1*nevt,"TRandom1 (RanLux) luxury=4",4);
 
@@ -96,7 +100,8 @@ int main(int argc, char **argv){
    TestRng<ROOT::Math::RanLuxSEngine>(nevt,"New Ranlux24 version lux = 2",2);
    TestRng<ROOT::Math::RanLuxDEngine>(nevt,"New Ranlux48 version (lux=1)",1);
    TestRng<ROOT::Math::RanLuxDEngine>(nevt,"New Ranlux48 version (lux=2)",2);
-
+#endif
+   
    TestRng<ROOT::Math::StdEngine<std::ranlux48>>(0.1*nevt,"RanLux 48 from std");
 
 
