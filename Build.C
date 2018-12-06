@@ -72,21 +72,48 @@ void Build() {
 
    // build now ROOT test program 
    TString testProgram = "testu01_time";
+   TString testProgram_obj = testProgram + ".o";
    TString testProgram_src = testProgram + ".cpp";
    TString libDirName = dirName + "/lib";
    TString incDirName = dirName + "/include";
-   cmd = TString::Format("g++ -O2 -I%s `root-config --cflags --libs` -L%s -ltestu01 -lprobdist -lmylib %s -o %s",
-                         incDirName.Data(),libDirName.Data(),testProgram_src.Data(),testProgram.Data() );
-   gSystem->Exec(cmd);
+
+   cmd = TString::Format("g++ -O3 -c  -I%s `root-config --cflags` %s -o %s",
+                         incDirName.Data(),testProgram_src.Data(),testProgram_obj.Data() );
+   iret = gSystem->Exec(cmd);
+   cmd = TString::Format("g++ -O3 %s `root-config --libs` -L%s -ltestu01 -lprobdist -lmylib -o %s",
+                         testProgram_obj.Data(),libDirName.Data(),testProgram.Data() );
+   
+   iret |= gSystem->Exec(cmd);
+   if (iret) {
+      Error("Build","Error building %s",testProgram.Data());
+      return;
+   }
 
    testProgram = "testu01_bigcrush";
    testProgram_src = testProgram + ".cpp";
-   cmd = TString::Format("g++ -O2 -I%s `root-config --cflags --libs` -L%s -ltestu01 -lprobdist -lmylib %s -o %s",
-                         incDirName.Data(),libDirName.Data(),testProgram_src.Data(),testProgram.Data() );
-   gSystem->Exec(cmd);
+   testProgram_obj = testProgram + ".obj";
+
+   cmd = TString::Format("g++ -O3 -c  -I%s `root-config --cflags` %s -o %s",
+                         incDirName.Data(),testProgram_src.Data(),testProgram_obj.Data() );
+   iret = gSystem->Exec(cmd);
+   cmd = TString::Format("g++ -O3 %s `root-config --libs` -L%s -ltestu01 -lprobdist -lmylib -o %s",
+                         testProgram_obj.Data(),libDirName.Data(),testProgram.Data() );
+   
+   iret |= gSystem->Exec(cmd);
+   if (iret) {
+      Error("Build","Error building %s",testProgram.Data());
+      return;
+   }
 
 
- 
+
+   printf("Ready to run the test !\n");
+   printf("type for example : \n ./testu01_time \n ./testu01_bigcrush -small  \n ");
+
+
+
+   return;
+
+
 }
-
  
