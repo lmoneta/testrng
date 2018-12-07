@@ -6,6 +6,7 @@
 #include "Math/MixMaxEngine.h"
 #include "Math/MersenneTwisterEngine.h"
 #include "Math/RanLuxEngine.h"
+#include "Math/RanLuxPPEngine.h"
 #include <TMath.h>
 #include "TSystem.h"
 
@@ -93,6 +94,15 @@ int main(int argc, char **argv){
    TestRng<TRandom>(nevt,"TRandom (LCG)");
    TestRng<TRandom3>(nevt,"TRandom3 (Mersenne-Twister)");
    TestRng<TRandom2>(nevt,"TRandom2 (Tausworth)");
+
+   TestRng<ROOT::Math::RanLuxPPEngineFloat>(nevt,"New Ranlux++ float version (p=389)",4);
+   TestRng<ROOT::Math::RanLuxPPEngineFloat>(nevt,"New Ranlux++ float version (p=1024)",5);
+   TestRng<ROOT::Math::RanLuxPPEngineFloat>(nevt,"New Ranlux++ float version (p=2048)",6);
+
+   TestRng<ROOT::Math::RanLuxPPEngine>(nevt,"New Ranlux++ version (p=389)",4);
+   TestRng<ROOT::Math::RanLuxPPEngine>(nevt,"New Ranlux++ version (p=1024)",5);
+   TestRng<ROOT::Math::RanLuxPPEngine>(nevt,"New Ranlux++ version (p=2048)",6);
+
    TestRng<TRandomMixMax>(nevt,"TRandomMixMax (MixMax240)");
    TestRng<ROOT::Math::MixMaxEngine240>(nevt,"MixMax 240");
    TestRng<ROOT::Math::MixMaxEngine17>(nevt,"MixMax 17");
@@ -110,6 +120,7 @@ int main(int argc, char **argv){
    TestRng<ROOT::Math::RanLuxDEngine>(nevt,"New Ranlux48 version (lux=1)",1);
    TestRng<ROOT::Math::RanLuxDEngine>(nevt,"New Ranlux48 version (lux=2)",2);
 
+   
    
    TestRng<ROOT::Math::StdEngine<std::ranlux48>>(0.1*nevt,"RanLux 48 from std");
 
