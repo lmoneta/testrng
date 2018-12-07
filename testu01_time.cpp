@@ -106,8 +106,9 @@ int main(int argc, char **argv){
    TestRng<TRandomMixMax>(nevt,"TRandomMixMax (MixMax240)");
    TestRng<ROOT::Math::MixMaxEngine240>(nevt,"MixMax 240");
    TestRng<ROOT::Math::MixMaxEngine17>(nevt,"MixMax 17");
-   TestRng<ROOT::Math::MixMaxEngine256>(nevt,"MixMax 256");
-   //TestRng<ROOT::Math::MixMaxEngine<10,7>>(nevt,"MixMax 10 skip 7");
+   TestRng<ROOT::Math::MixMaxEngine256>(nevt,"MixMax 256 skip 2 ");
+   TestRng<ROOT::Math::MixMaxEngine<256,5>>(nevt,"MixMax 256 skip 5");
+   TestRng<ROOT::Math::MixMaxEngine<10,14>>(nevt,"MixMax 10 skip 14");
    
    TestRng<ROOT::Math::StdEngine<std::mt19937_64>>(nevt,"Mersenne-Twister 64 from std");
 
