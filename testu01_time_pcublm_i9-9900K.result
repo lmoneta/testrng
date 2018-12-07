@@ -1,0 +1,304 @@
+ Test generation time for 1e+09 events 
+ CPU type used for this test
+Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz type x86_64 @ 4221 MHz 
+number of available cores = 16
+******************************************
+Test for TRandom (LCG) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   TRandom (LCG)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   1.81 sec
+
+******************************************
+Test for TRandom3 (Mersenne-Twister) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   TRandom3 (Mersenne-Twister)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   2.48 sec
+
+******************************************
+Test for TRandom2 (Tausworth) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   TRandom2 (Tausworth)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   2.60 sec
+
+******************************************
+Test for New Ranlux++ float version (p=389) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   New Ranlux++ float version (p=389)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   5.91 sec
+
+******************************************
+Test for New Ranlux++ float version (p=1024) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   New Ranlux++ float version (p=1024)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   5.92 sec
+
+******************************************
+Test for New Ranlux++ float version (p=2048) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   New Ranlux++ float version (p=2048)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   5.91 sec
+
+******************************************
+Test for New Ranlux++ version (p=389) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   New Ranlux++ version (p=389)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   7.79 sec
+
+******************************************
+Test for New Ranlux++ version (p=1024) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   New Ranlux++ version (p=1024)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   7.78 sec
+
+******************************************
+Test for New Ranlux++ version (p=2048) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   New Ranlux++ version (p=2048)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   7.79 sec
+
+******************************************
+Test for TRandomMixMax (MixMax240) generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   TRandomMixMax (MixMax240)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   4.28 sec
+
+******************************************
+Test for MixMax 240 generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   MixMax 240
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   4.67 sec
+
+******************************************
+Test for MixMax 17 generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   MixMax 17
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   5.03 sec
+
+******************************************
+Test for MixMax 256 skip 2  generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   MixMax 256 skip 2 
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  10.72 sec
+
+******************************************
+Test for MixMax 256 skip 5 generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   MixMax 256 skip 5
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  18.24 sec
+
+******************************************
+Test for MixMax 10 skip 14 generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   MixMax 10 skip 14
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  53.04 sec
+
+******************************************
+Test for Mersenne-Twister 64 from std generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   Mersenne-Twister 64 from std
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   9.64 sec
+
+******************************************
+Test for TRandom1 (RanLux) generator ...
+******************************************
+Create ranlux engine with luxury level 3
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   TRandom1 (RanLux)
+ Method:      GetU01
+ Number of calls:  100000000
+ Total CPU time:   4.67 sec
+
+******************************************
+Test for TRandom1 (RanLux) luxury=4 generator ...
+******************************************
+Create ranlux engine with luxury level 4
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   TRandom1 (RanLux) luxury=4
+ Method:      GetU01
+ Number of calls:  100000000
+ Total CPU time:   4.68 sec
+
+******************************************
+Test for New Ranlux24 version lux = 0 generator ...
+******************************************
+Create ranlux engine with luxury level 0
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   New Ranlux24 version lux = 0
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:   7.91 sec
+
+******************************************
+Test for New Ranlux24 version lux = 1 generator ...
+******************************************
+Create ranlux engine with luxury level 1
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   New Ranlux24 version lux = 1
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  11.47 sec
+
+******************************************
+Test for New Ranlux24 version lux = 2 generator ...
+******************************************
+Create ranlux engine with luxury level 2
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   New Ranlux24 version lux = 2
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  18.90 sec
+
+******************************************
+Test for New Ranlux48 version (lux=1) generator ...
+******************************************
+Create ranlux engine with luxury level 1
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   New Ranlux48 version (lux=1)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  19.49 sec
+
+******************************************
+Test for New Ranlux48 version (lux=2) generator ...
+******************************************
+Create ranlux engine with luxury level 2
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   New Ranlux48 version (lux=2)
+ Method:      GetU01
+ Number of calls:  1000000000
+ Total CPU time:  34.38 sec
+
+******************************************
+Test for RanLux 48 from std generator ...
+******************************************
+
+-------------  Results of speed test  ---------------
+
+ Host:        pcublm, Linux
+ Generator:   RanLux 48 from std
+ Method:      GetU01
+ Number of calls:  100000000
+ Total CPU time:   9.97 sec
+
+
+***************************************************
+ CPU type used for this test
+Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz type x86_64 @ 4221 MHz 
+number of available cores = 16
