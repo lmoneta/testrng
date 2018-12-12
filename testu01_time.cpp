@@ -6,7 +6,12 @@
 #include "Math/MixMaxEngine.h"
 #include "Math/MersenneTwisterEngine.h"
 #include "Math/RanLuxEngine.h"
+
+// for ranluxPP
+#define USE_RANLUXPP
 #include "Math/RanLuxPPEngine.h"
+
+
 #include <TMath.h>
 #include "TSystem.h"
 
@@ -109,6 +114,7 @@ int main(int argc, char **argv){
    TestRng<ROOT::Math::MixMaxEngine256>(nevt,"MixMax 256 skip 2 ");
    TestRng<ROOT::Math::MixMaxEngine<256,5>>(nevt,"MixMax 256 skip 5");
    TestRng<ROOT::Math::MixMaxEngine<10,14>>(nevt,"MixMax 10 skip 14");
+   TestRng<ROOT::Math::MixMaxEngine<16,11>>(nevt,"MixMax 16 skip 11");
    
    TestRng<ROOT::Math::StdEngine<std::mt19937_64>>(nevt,"Mersenne-Twister 64 from std");
 
