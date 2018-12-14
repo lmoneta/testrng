@@ -8,6 +8,11 @@
 #include <TMath.h>
 #include "Math/RanLuxEngine.h"
 
+// for ranluxPP
+#define USE_RANLUXPP
+#include "Math/RanLuxPPEngine.h"
+
+
 #include <iostream>
 #include <cmath>
 #include <ctime>
@@ -25,6 +30,7 @@ extern "C" {
 
 // specific tests
 #include "snpair.h"
+#include "scomp.h"
    
 }
 
@@ -36,7 +42,12 @@ using namespace std;
 bool only_small_crush = false;
 unsigned int seed_value = 0;
 int test_number = -1;
-bool run_snpair = false; 
+
+// specific tests
+bool run_snpair = false;
+bool run_scomp = false;
+bool run_rabbit = false;
+bool run_nips = false; 
 
 template<class REngine>
 void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
@@ -70,21 +81,53 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
       snpair_Res *  sres = snpair_CreateRes ();
 
       // apply the test
-      long N =  10;
-      long n = 1000000;
+      long N =  5;
+      long n = 2000000; // ma can be allocated 
       int r =  0;
-      int t = 10;
+      int t = 16;
       int p = 0;
-      int m = 40;//  Torus =  TRUE
+      int m = 30;//  Torus =  TRUE
          
       snpair_ClosePairs (ugen, sres, N, n, r, t, p, m);
       //snpair_WriteResultCP(ugen,sres, N, n, r, t, p, m, true);
 
-      snpair_ClosePairsBitMatch (ugen, sres, N, n, r, t);
+      // N = 2000000;
+      // snpair_ClosePairsBitMatch (ugen, sres, N, n, r, t);
       
       snpair_DeleteRes (sres); 
       unif01_DeleteExternGen01 (ugen);
       return;
+   }
+
+   if (run_scomp) {
+
+     // define parameters for snpair test
+     scomp_Res *  sres = scomp_CreateRes ();
+     
+     // apply the test
+     long N =  1;
+     long n = 40020;
+     int r =  0;
+     int s = 1 ;
+     
+     scomp_LinearComp (ugen, sres, N, n, r, s);
+     
+     scomp_DeleteRes (sres); 
+     unif01_DeleteExternGen01 (ugen);
+     return;
+   }
+
+   // rabbit test 
+   if (run_rabbit) {
+     double nbits = TMath::Power(2,30);  // number of bit to use
+     bbattery_Rabbit(ugen, nbits);
+     unif01_DeleteExternGen01 (ugen);
+     return;
+   }
+   if (run_nips) {
+     bbattery_FIPS_140_2(ugen);
+     unif01_DeleteExternGen01 (ugen);
+     return;
    }
 
    // run a single test
@@ -157,8 +200,12 @@ void run_test(int itype, const char * rng_name) {
       TestRng_BigCrush<ROOT::Math::MixMaxEngine<8,0>>("MiMaxEngine 8 skip 0");
       break;      
    case 15:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine<10,0>>("MiMaxEngine 10 skip 0");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<10,4>>("MiMaxEngine 10 skip 4");
       break;      
+   case 16:
+      TestRng_BigCrush<ROOT::Math::RanLuxPPEngine>("RanLux++ Engine");
+      break;
+      
    default:
       TestRng_BigCrush<TRandomMixMax>("TRandomMixMax (MixMax240)");
       break;
@@ -171,7 +218,7 @@ int main(int argc, char **argv)
    std::vector<TString> genNames = {"TRANDOM0","TRANDOM1","TRANDOM2","TRANDOM3",
                                     "MIXMAX","MIXMAX17","MIXMAX256","MT19937","RANLUX48",
                                     "RANLUXS","RANLUXD","RANLUXS0","RANLUXS2","RANLUXD2",
-                                    "MIXMAX8","MIXMAX10"};
+                                    "MIXMAX8","MIXMAX10","RANLUXPP"};
    int itype = -1;
    bool run_all = false; 
    // Parse command line arguments
@@ -181,6 +228,14 @@ int main(int argc, char **argv)
       arg.ToUpper();
       if (arg.Contains("-SMALL")) {
          only_small_crush = true;
+         continue;
+      }
+      if (arg.Contains("-RABBIT")) {
+         run_rabbit = true;
+         continue;
+      }
+      if (arg.Contains("-NIPS")) {
+         run_nips = true;
          continue;
       }
       if (arg.Contains("-ALL")) {
@@ -201,6 +256,7 @@ int main(int argc, char **argv)
          TString testName = arg(arg.First("=")+1,arg.Length());
          testName.ToLower();
          if (testName.Contains("snpair")) run_snpair = true; 
+         if (testName.Contains("scomp")) run_scomp = true; 
       }
       for (size_t i = 0; i < genNames.size(); ++i) {
          if (arg.Contains(genNames[i]))  itype = i;
