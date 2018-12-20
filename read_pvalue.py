@@ -116,7 +116,8 @@ def main() :
         # write and analyze p values using ROOT
         print "found ",nexps," experiments with ",ntests," tests"
         m = ROOT.TMatrixD(ntests, nexps );
-        h2 = ROOT.TH2D("h2","p Values",ntests,0.5,ntests+0.5,nexps,0.,1.)
+        #use 100 bins for the p-value
+        h2 = ROOT.TH2D("h2","p Values",ntests,0.5,ntests+0.5,100,0.,1.)
         i = 0; 
         for  exp in valueList :
             j = 0

@@ -5,7 +5,7 @@
 nproc = 8
 njobs = 10
 option = "-rabbit"
-rng_name = "ranluxpp"
+rng_name = "mixmax8"
 outPrefix = "/home/moneta/cernbox/root/tests/mixmax/"
 
 import os

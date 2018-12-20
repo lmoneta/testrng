@@ -31,7 +31,9 @@ extern "C" {
 // specific tests
 #include "snpair.h"
 #include "scomp.h"
-   
+#include "smarsa.h"
+#include "swalk.h"
+#include "sknuth.h"   
 }
 
 
@@ -39,15 +41,22 @@ using namespace std;
 
 //#define Nstreams 1
 
-bool only_small_crush = false;
 unsigned int seed_value = 0;
 int test_number = -1;
 
 // specific tests
 bool run_snpair = false;
 bool run_scomp = false;
-bool run_rabbit = false;
 bool run_nips = false; 
+bool run_smarsa = false; 
+bool run_swalk = false;
+bool run_sknuth = false; 
+
+bool run_rabbit = false;
+bool run_small_crush = false;
+bool run_medium_crush = false;
+
+
 
 template<class REngine>
 void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
@@ -68,11 +77,18 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
    }
 
    
-   TRng <REngine>::SetEngine (seed_value, luxlevel);
+   TRng2 <REngine>::SetEngine (seed_value, luxlevel);
 
-   unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm); 
+   unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng2<REngine>::Rndm); 
    //unif01_TimerGenWr(ugen,nevt,true);
 
+
+   // test some generated numbers
+   std::cout << "Print few generated numbers " << std::endl;
+   for (int i = 0; i < 100; ++i)
+     std::cout << ugen->GetU01( ugen->param, ugen->state) << " , ";
+   std::cout << std::endl;
+   
 
    // run specific tests given by name
    if (run_snpair) {
@@ -116,6 +132,55 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
      unif01_DeleteExternGen01 (ugen);
      return;
    }
+   if (run_smarsa) {
+     // run smarsa birthday spacing test
+          // apply the test
+     long N =  5;
+     long n = 20000000;
+     int r =  0;
+     long d =  2147483648;
+     int t = 2;
+     int p = 1;
+     smarsa_Res *  sres = smarsa_CreateRes ();
+     smarsa_BirthdaySpacings (ugen, sres->Pois, N, n, r, d, t, p);
+     
+     smarsa_DeleteRes (sres); 
+     unif01_DeleteExternGen01 (ugen);
+     return; 
+   }
+   if (run_swalk) {
+     // run random walk test
+
+     long N =  1;
+     long n = 1000000;
+     int r =  1;
+     int s = 10;
+     long L0 =  10000;
+     long L1 =  10000;
+     
+     swalk_Res *  sres = swalk_CreateRes ();
+     swalk_RandomWalk1 (ugen, sres, N, n, r, s, L0, L1);
+     
+     swalk_DeleteRes (sres); 
+     unif01_DeleteExternGen01 (ugen);
+     return; 
+   }
+   if (run_sknuth) {
+     // run sknuth tests
+
+     long N =  1;
+     long n = 10000000000;
+     int r =  0;
+     double alpha = 0;
+     double beta = 0.0625;
+     
+     sknuth_Res1 *  sres = sknuth_CreateRes1 ();
+     sknuth_Gap (ugen, sres->Chi, N, n, r, alpha, beta);
+     
+     sknuth_DeleteRes1 (sres); 
+     unif01_DeleteExternGen01 (ugen);
+     return; 
+   }
 
    // rabbit test 
    if (run_rabbit) {
@@ -138,8 +203,9 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
    }
    // run all tests 
    else { 
-      bbattery_SmallCrush (ugen);
-      if (!only_small_crush)  bbattery_BigCrush (ugen);
+      if (run_small_crush) bbattery_SmallCrush (ugen);
+      else if (run_medium_crush) bbattery_Crush (ugen);
+      else  bbattery_BigCrush (ugen);
 
    }
 
@@ -153,6 +219,7 @@ void run_test(int itype, const char * rng_name) {
 
    // test TRandom (LCG)
    switch (itype) {
+#if 0
    case 0:
       TestRng_BigCrush<TRandom>("TRandom (LCG)");
       break;
@@ -165,6 +232,7 @@ void run_test(int itype, const char * rng_name) {
    case 3: 
       TestRng_BigCrush<TRandom3>("TRandom3 (Mersenne-Twister)");
       break;
+#endif
    case 4: 
       //TestRng_BigCrush<TRandomMixMax>("TRandomMixMax (MixMax240)");
       TestRng_BigCrush<ROOT::Math::MixMaxEngine240>("MixMax 240");
@@ -173,7 +241,7 @@ void run_test(int itype, const char * rng_name) {
       TestRng_BigCrush<ROOT::Math::MixMaxEngine17>("MixMax 17");
       break;
    case 6: 
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine256>("MixMax 256");
+     TestRng_BigCrush<ROOT::Math::MixMaxEngine<256,2>>("MixMax 256");
       break;
    case 7: 
       TestRng_BigCrush<ROOT::Math::StdEngine<std::mt19937_64>>("Mersenne-Twister 64 from std");
@@ -205,9 +273,25 @@ void run_test(int itype, const char * rng_name) {
    case 16:
       TestRng_BigCrush<ROOT::Math::RanLuxPPEngine>("RanLux++ Engine");
       break;
+   case 17:
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine44851>("Mixmax 44851 Engine");
+      break;
+   case 18:
+     TestRng_BigCrush<ROOT::Math::MixMaxEngine<256,0>>("Mixmax 256-S0 Engine");
+      break;
+   case 19:
+     TestRng_BigCrush<ROOT::Math::MixMaxEngine<16,0>>("Mixmax 16 skip 0 Engine");
+      break;
+   case 20:
+     TestRng_BigCrush<ROOT::Math::MixMaxEngine<44,0>>("Mixmax 44 skip 0 Engine");
+      break;
+   case 21:
+     TestRng_BigCrush<ROOT::Math::MixMaxEngine<88,0>>("Mixmax 88 skip 0 Engine");
+      break;
       
    default:
-      TestRng_BigCrush<TRandomMixMax>("TRandomMixMax (MixMax240)");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine240>("MixMax 240");
+      //TestRng_BigCrush<TRandomMixMax>("TRandomMixMax (MixMax240)");
       break;
    }
 
@@ -218,7 +302,8 @@ int main(int argc, char **argv)
    std::vector<TString> genNames = {"TRANDOM0","TRANDOM1","TRANDOM2","TRANDOM3",
                                     "MIXMAX","MIXMAX17","MIXMAX256","MT19937","RANLUX48",
                                     "RANLUXS","RANLUXD","RANLUXS0","RANLUXS2","RANLUXD2",
-                                    "MIXMAX8","MIXMAX10","RANLUXPP"};
+                                    "MIXMAX8","MIXMAX10","RANLUXPP","MIXMAX44851","MIXMAX256-0",
+                                    "MIXMAX16-0","MIXMAX44-0","MIXMAX88-0"};
    int itype = -1;
    bool run_all = false; 
    // Parse command line arguments
@@ -227,7 +312,11 @@ int main(int argc, char **argv)
       arg = argv[i] ;
       arg.ToUpper();
       if (arg.Contains("-SMALL")) {
-         only_small_crush = true;
+         run_small_crush = true;
+         continue;
+      }
+      if (arg.Contains("-MEDIUM")) {
+         run_medium_crush = true;
          continue;
       }
       if (arg.Contains("-RABBIT")) {
@@ -257,6 +346,9 @@ int main(int argc, char **argv)
          testName.ToLower();
          if (testName.Contains("snpair")) run_snpair = true; 
          if (testName.Contains("scomp")) run_scomp = true; 
+         if (testName.Contains("smarsa")) run_smarsa = true; 
+         if (testName.Contains("swalk")) run_swalk = true; 
+         if (testName.Contains("sknuth")) run_sknuth = true; 
       }
       for (size_t i = 0; i < genNames.size(); ++i) {
          if (arg.Contains(genNames[i]))  itype = i;
