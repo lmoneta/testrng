@@ -56,7 +56,7 @@ bool run_rabbit = false;
 bool run_small_crush = false;
 bool run_medium_crush = false;
 
-
+long nInput = -1;
 
 template<class REngine>
 void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
@@ -76,10 +76,14 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
       std::cout << "Actual seed value used is " << seed_value << std::endl;
    }
 
-   
+#ifdef USE_TRNG2   // case of TRG2: split a value in two of ~31 bits 
    TRng2 <REngine>::SetEngine (seed_value, luxlevel);
-
-   unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng2<REngine>::Rndm); 
+   unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng2<REngine>::Rndm);
+#else  //default case 
+   TRng <REngine>::SetEngine (seed_value, luxlevel);
+   unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm);
+#endif
+   
    //unif01_TimerGenWr(ugen,nevt,true);
 
 
@@ -98,7 +102,7 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
 
       // apply the test
       long N =  5;
-      long n = 2000000; // ma can be allocated 
+      long n = (nInput > 0) ? nInput : 2000000; // ma can be allocated 
       int r =  0;
       int t = 16;
       int p = 0;
@@ -122,7 +126,7 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
      
      // apply the test
      long N =  1;
-     long n = 40020;
+     long n = (nInput > 0) ? nInput : 400020;
      int r =  0;
      int s = 1 ;
      
@@ -136,7 +140,7 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
      // run smarsa birthday spacing test
           // apply the test
      long N =  5;
-     long n = 20000000;
+     long n = (nInput > 0) ? nInput : 20000000;
      int r =  0;
      long d =  2147483648;
      int t = 2;
@@ -152,11 +156,11 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
      // run random walk test
 
      long N =  1;
-     long n = 1000000;
-     int r =  1;
-     int s = 10;
-     long L0 =  10000;
-     long L1 =  10000;
+     long n = (nInput > 0) ? nInput : 100000000;
+     int r =  0;
+     int s = 5;
+     long L0 =  50;
+     long L1 =  50;
      
      swalk_Res *  sres = swalk_CreateRes ();
      swalk_RandomWalk1 (ugen, sres, N, n, r, s, L0, L1);
@@ -167,15 +171,37 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
    }
    if (run_sknuth) {
      // run sknuth tests
+     bool gap_test = false;
+     bool serial_test = true;
 
-     long N =  1;
-     long n = 10000000000;
+          long N =  1;
+     //long n = 100000000000;  // 10^11
+     long n = (nInput > 0) ? nInput : 100000000;
      int r =  0;
-     double alpha = 0;
-     double beta = 0.0625;
-     
+
      sknuth_Res1 *  sres = sknuth_CreateRes1 ();
-     sknuth_Gap (ugen, sres->Chi, N, n, r, alpha, beta);
+
+     if (gap_test) { 
+       double alpha = 0;
+       double beta = 0.0625;
+     
+       sknuth_Gap (ugen, sres->Chi, N, n, r, alpha, beta);
+     }
+     else if (serial_test) {
+       long d = 100;
+       long t = 3;
+
+       sknuth_Serial (ugen, sres->Chi, N, n, r, d, t);
+     }
+       
+     // print frequency result
+     if (gap_test) { 
+       std::cout << "Frequency result " << std::endl;
+       for (int i = 0; i <= sres->Chi->degFree; ++i) {
+	 std::cout << " ( " << sres->Chi->Count[i] << " , " << sres->Chi->NbExp[i] << " ) ,";
+       }
+       std::cout << std::endl;
+     }
      
      sknuth_DeleteRes1 (sres); 
      unif01_DeleteExternGen01 (ugen);
@@ -219,7 +245,8 @@ void run_test(int itype, const char * rng_name) {
 
    // test TRandom (LCG)
    switch (itype) {
-#if 0
+
+#ifndef USE_TRG2 // exclude when using the case of splitting 2 words in one of 32 bits 
    case 0:
       TestRng_BigCrush<TRandom>("TRandom (LCG)");
       break;
@@ -350,6 +377,12 @@ int main(int argc, char **argv)
          if (testName.Contains("swalk")) run_swalk = true; 
          if (testName.Contains("sknuth")) run_sknuth = true; 
       }
+      if (arg.Contains("-N=")) {  // get number of n values to generate (to be used when a single test is run)
+         TString n_str = arg(arg.First("=")+1,arg.Length());
+	 nInput = std::stol( std::string(n_str) );
+      }
+
+      
       for (size_t i = 0; i < genNames.size(); ++i) {
          if (arg.Contains(genNames[i]))  itype = i;
          if (arg.Contains("LCG"))  itype = 0;      
