@@ -171,7 +171,7 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
    }
    if (run_sknuth) {
      // run sknuth tests
-     bool gap_test = false;
+     bool gap_test = true;
      bool serial_test = true;
 
           long N =  1;
@@ -268,7 +268,7 @@ void run_test(int itype, const char * rng_name) {
       TestRng_BigCrush<ROOT::Math::MixMaxEngine17>("MixMax 17");
       break;
    case 6: 
-     TestRng_BigCrush<ROOT::Math::MixMaxEngine<256,2>>("MixMax 256");
+     TestRng_BigCrush<ROOT::Math::MixMaxEngine<256,2>>("MixMax 256-S2");
       break;
    case 7: 
       TestRng_BigCrush<ROOT::Math::StdEngine<std::mt19937_64>>("Mersenne-Twister 64 from std");
@@ -304,20 +304,44 @@ void run_test(int itype, const char * rng_name) {
       TestRng_BigCrush<ROOT::Math::MixMaxEngine44851>("Mixmax 44851 Engine");
       break;
    case 18:
-     TestRng_BigCrush<ROOT::Math::MixMaxEngine<256,0>>("Mixmax 256-S0 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<256,0>>("Mixmax 256-S0 Engine");
       break;
    case 19:
-     TestRng_BigCrush<ROOT::Math::MixMaxEngine<16,0>>("Mixmax 16 skip 0 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<16,0>>("Mixmax 16 skip 0 Engine");
       break;
    case 20:
-     TestRng_BigCrush<ROOT::Math::MixMaxEngine<44,0>>("Mixmax 44 skip 0 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<44,0>>("Mixmax 44 skip 0 Engine");
       break;
    case 21:
-     TestRng_BigCrush<ROOT::Math::MixMaxEngine<88,0>>("Mixmax 88 skip 0 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<88,0>>("Mixmax 88 skip 0 Engine");
+      break;
+   case 22:
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<10,14>>("Mixmax 10 skip 14 Engine");
+      break;
+   case 23:
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<16,11>>("Mixmax 16 skip 11 Engine");
+      break;
+   case 24:
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<44,8>>("Mixmax 44 skip 8 Engine");
+      break;
+   case 25:
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<88,6>>("Mixmax 88 skip 6 Engine");
+      break;
+   case 26:
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<256,5>>("Mixmax 256 skip 5 Engine");
+      break;
+   case 27:
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<1000,4>>("Mixmax 1000 skip 4 Engine");
+      break;
+   case 28:
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<10,0>>("Mixmax 10 skip 0 Engine");
+      break;
+   case 29:
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<10,2>>("Mixmax 10 skip 2 Engine");
       break;
       
    default:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine240>("MixMax 240");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine240>("MixMax 240 (default)");
       //TestRng_BigCrush<TRandomMixMax>("TRandomMixMax (MixMax240)");
       break;
    }
@@ -330,7 +354,12 @@ int main(int argc, char **argv)
                                     "MIXMAX","MIXMAX17","MIXMAX256","MT19937","RANLUX48",
                                     "RANLUXS","RANLUXD","RANLUXS0","RANLUXS2","RANLUXD2",
                                     "MIXMAX8","MIXMAX10","RANLUXPP","MIXMAX44851","MIXMAX256-0",
-                                    "MIXMAX16-0","MIXMAX44-0","MIXMAX88-0"};
+                                    "MIXMAX16-0","MIXMAX44-0","MIXMAX88-0",
+                                    "MIXMAX10-14","MIXMAX16-11","MIXMAX44-8","MIXMAX88-6",
+                                    "MIXMAX256-5","MIXMAX1000-4",
+                                    "MIXMAX10-0","MIXMAX10-2"
+                                    };
+
    int itype = -1;
    bool run_all = false; 
    // Parse command line arguments
