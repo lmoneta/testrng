@@ -176,7 +176,7 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
      bool serial_test = true;
 
      long N = 1;
-     long Nskip = 0;
+     //long Nskip = 0;
      //long n = 100000000000;  // 10^11
      long n = (nInput > 0) ? nInput : 100000000;
      int r =  0;
@@ -185,9 +185,11 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
 
      if (gap_test) { 
        double alpha = 0;
-       double beta = 1./2;
-     
-       sknuth_Gap (ugen, sres->Chi, Nskip, n, r, alpha, beta);
+       double beta = 0.0625;          //1./2;
+
+       // when using a modified version use NSkip to skip numbers a
+       //sknuth_Gap (ugen, sres->Chi, Nskip, n, r, alpha, beta);
+       sknuth_Gap (ugen, sres->Chi, N, n, r, alpha, beta);
      }
      else if (serial_test) {
        long d = 100;
