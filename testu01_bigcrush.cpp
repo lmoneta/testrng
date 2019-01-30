@@ -75,13 +75,14 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
       seed_value = r.Integer(MaxInt);
       std::cout << "Actual seed value used is " << seed_value << std::endl;
    }
-
 #ifdef USE_TRNG2   // case of TRG2: split a value in two of ~31 bits 
    TRng2 <REngine>::SetEngine (seed_value, luxlevel);
    unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng2<REngine>::Rndm);
 #else  //default case 
    TRng <REngine>::SetEngine (seed_value, luxlevel);
    unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm);
+   //TRng <REngine>::SetMaxEvt (7);  // useonly one number in N-1
+   //unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm3);
 #endif
    
    //unif01_TimerGenWr(ugen,nevt,true);
@@ -139,12 +140,12 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
    if (run_smarsa) {
      // run smarsa birthday spacing test
           // apply the test
-     long N =  5;
+     long N =  1;
      long n = (nInput > 0) ? nInput : 20000000;
      int r =  0;
-     long d =  2147483648;
-     int t = 2;
-     int p = 1;
+     long d =  256;
+     int t = 8;
+     int p = 2;
      smarsa_Res *  sres = smarsa_CreateRes ();
      smarsa_BirthdaySpacings (ugen, sres->Pois, N, n, r, d, t, p);
      
@@ -157,7 +158,7 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
 
      long N =  1;
      long n = (nInput > 0) ? nInput : 100000000;
-     int r =  0;
+     int r =  25;
      int s = 5;
      long L0 =  50;
      long L1 =  50;
@@ -174,7 +175,8 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
      bool gap_test = true;
      bool serial_test = true;
 
-          long N =  1;
+     long N = 1;
+     long Nskip = 0;
      //long n = 100000000000;  // 10^11
      long n = (nInput > 0) ? nInput : 100000000;
      int r =  0;
@@ -183,9 +185,9 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
 
      if (gap_test) { 
        double alpha = 0;
-       double beta = 0.0625;
+       double beta = 1./2;
      
-       sknuth_Gap (ugen, sres->Chi, N, n, r, alpha, beta);
+       sknuth_Gap (ugen, sres->Chi, Nskip, n, r, alpha, beta);
      }
      else if (serial_test) {
        long d = 100;

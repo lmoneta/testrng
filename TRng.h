@@ -29,6 +29,14 @@ struct TRng {
       fgCounter++;
       return fgEngine->Rndm(); 
    }
+   static double Rndm3() {
+      double val =  fgEngine->Rndm(); 
+      while (fgCounter % fgMaxEvt != 0) {
+         val = fgEngine->Rndm();
+         fgCounter++;
+      }
+      return val; 
+   }
    static REngine * fgEngine;
    static uint64_t fgCounter;
    static uint64_t fgMaxEvt;
@@ -68,6 +76,8 @@ struct TRng<TRandom1> {
       fgCounter++;
       return fgEngine->Rndm(); 
    }
+   static double Rndm3() { return 0; }
+
    static REngine * fgEngine; 
    static uint64_t fgCounter;
    static uint64_t fgMaxEvt;
@@ -100,6 +110,8 @@ struct TRng<ROOT::Math::RanLuxSEngine> {
       fgCounter++;
       return fgEngine->Rndm(); 
    }
+   static double Rndm3() { return 0; }
+   
    static REngine * fgEngine; 
    static uint64_t fgCounter;
    static uint64_t fgMaxEvt;
@@ -133,6 +145,8 @@ struct TRng<ROOT::Math::RanLuxDEngine> {
       fgCounter++;
       return fgEngine->Rndm(); 
    }
+   static double Rndm3() { return 0; }
+
    static REngine * fgEngine; 
    static uint64_t fgCounter;
    static uint64_t fgMaxEvt;
