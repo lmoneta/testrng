@@ -7,6 +7,8 @@
 #include "Math/MersenneTwisterEngine.h"
 #include <TMath.h>
 #include "Math/RanLuxEngine.h"
+#include "TH1.h"
+#include "TFile.h"
 
 // for ranluxPP
 #define USE_RANLUXPP
@@ -33,7 +35,8 @@ extern "C" {
 #include "scomp.h"
 #include "smarsa.h"
 #include "swalk.h"
-#include "sknuth.h"   
+#include "sknuth.h"
+#include "smultin.h"
 }
 
 
@@ -51,6 +54,7 @@ bool run_nips = false;
 bool run_smarsa = false; 
 bool run_swalk = false;
 bool run_sknuth = false; 
+bool run_smultin = false; 
 
 bool run_rabbit = false;
 bool run_small_crush = false;
@@ -78,11 +82,19 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
 #ifdef USE_TRNG2   // case of TRG2: split a value in two of ~31 bits 
    TRng2 <REngine>::SetEngine (seed_value, luxlevel);
    unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng2<REngine>::Rndm);
-#else  //default case 
+   std::cout << "Using split of generated number in 2 of 31 bits " << std::endl;
+#else  
    TRng <REngine>::SetEngine (seed_value, luxlevel);
+#ifdef SKIP_VALUES  // to skip values (i..e. skipping first 3 values of sequence as defined in TRng::Rndm3
+   unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm3);
+   std::cout << "Skip some values in generated sequence according to definition in Trng::Rndm3 " << std::endl;
+#else
+   // default case
    unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm);
-   //TRng <REngine>::SetMaxEvt (7);  // useonly one number in N-1
-   //unif01_Gen *ugen = unif01_CreateExternGen01 ((char *) name, TRng<REngine>::Rndm3);
+   std::cout << "run generator in standard mode " << std::endl;
+#endif
+   //TRng <REngine>::SetMaxEvt (3);  // useonly one number in N-1
+   
 #endif
    
    //unif01_TimerGenWr(ugen,nevt,true);
@@ -90,10 +102,11 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
 
    // test some generated numbers
    std::cout << "Print few generated numbers " << std::endl;
-   for (int i = 0; i < 100; ++i)
-     std::cout << ugen->GetU01( ugen->param, ugen->state) << " , ";
+   for (int i = 0; i < 100; ++i) {
+      double x = ugen->GetU01( ugen->param, ugen->state); 
+      std::cout << " " << x  << " , ";
+   }
    std::cout << std::endl;
-   
 
    // run specific tests given by name
    if (run_snpair) {
@@ -140,12 +153,12 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
    if (run_smarsa) {
      // run smarsa birthday spacing test
           // apply the test
-     long N =  1;
-     long n = (nInput > 0) ? nInput : 20000000;
+     long N =  1000;
+     long n = (nInput > 0) ? nInput : 10000000;
      int r =  0;
-     long d =  256;
-     int t = 8;
-     int p = 2;
+     long d =  64;
+     int t = 10;
+     int p = 1;
      smarsa_Res *  sres = smarsa_CreateRes ();
      smarsa_BirthdaySpacings (ugen, sres->Pois, N, n, r, d, t, p);
      
@@ -173,7 +186,8 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
    if (run_sknuth) {
      // run sknuth tests
      bool gap_test = true;
-     bool serial_test = true;
+     bool serial_test = false;
+     bool collision_test = false; 
 
      long N = 1;
      //long Nskip = 0;
@@ -183,9 +197,12 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
 
      sknuth_Res1 *  sres = sknuth_CreateRes1 ();
 
+     int gap_size = 4;
      if (gap_test) { 
        double alpha = 0;
-       double beta = 0.0625;          //1./2;
+       //double beta = 0.0625;          //1./16.
+       double beta = 1./double(gap_size);          //1./16.
+       //double beta = 0.00097656250;  // 1. / 2^10
 
        // when using a modified version use NSkip to skip numbers a
        //sknuth_Gap (ugen, sres->Chi, Nskip, n, r, alpha, beta);
@@ -197,19 +214,59 @@ void TestRng_BigCrush(const char * name="Generic", int luxlevel = -1) {
 
        sknuth_Serial (ugen, sres->Chi, N, n, r, d, t);
      }
+     else if (collision_test) {
+        sknuth_Res2 *  sres2 = sknuth_CreateRes2 ();
+       long d = 2048;
+       r = 0; 
+       //n = 4.E8;
+       N = 10;
+       int t = 5;
+       // this is exactly equivalente to smultin_Multinomial with sparse=true
+       sknuth_Collision(ugen, sres2, N, n, r, d, t); 
+       
+       sknuth_DeleteRes2 (sres2);
+     }
        
      // print frequency result
-     if (gap_test) { 
-       std::cout << "Frequency result " << std::endl;
-       for (int i = 0; i <= sres->Chi->degFree; ++i) {
-	 std::cout << " ( " << sres->Chi->Count[i] << " , " << sres->Chi->NbExp[i] << " ) ,";
-       }
-       std::cout << std::endl;
+     if (gap_test) {
+        int nb = sres->Chi->degFree+1; 
+        auto h1 = new TH1D("hobs","Observed gap values",nb, 0, nb); 
+        auto h0 = new TH1D("hexp","Expected gap values",nb, 0, nb); 
+        std::cout << "Frequency result " << std::endl;
+        for (int i = 0; i < nb; ++i) {
+           std::cout << " ( " << sres->Chi->Count[i] << " , " << sres->Chi->NbExp[i] << " ) ,";
+           h1->SetBinContent(i+1,sres->Chi->Count[i]);
+           h0->SetBinContent(i+1,sres->Chi->NbExp[i]);
+        }
+        std::cout << std::endl;
+        TString gname(name);
+        gname.ReplaceAll(" ","");
+        gname.ReplaceAll("Engine","");
+        TString fileName = TString::Format("test_sknuth_gap%d_%s_%g.root",gap_size,gname.Data(),double(n));
+        auto fout = TFile::Open(fileName,"RECREATE");
+        h0->Write();
+        h1->Write();
+        fout->Close();
      }
      
-     sknuth_DeleteRes1 (sres); 
+     sknuth_DeleteRes1 (sres);
      unif01_DeleteExternGen01 (ugen);
      return; 
+   }
+
+   //multinomial test
+   if (run_smultin) {
+      bool sparse = true;
+      smultin_Param * par = nullptr;
+      smultin_Res * sres = smultin_CreateRes( par);
+      long N = 10;
+      long n = 4E7;
+      long d = 8;
+      int r = 0;
+      int t = 16; 
+      smultin_Multinomial(ugen, par, sres, N, n, r, d, t, sparse); 
+      smultin_DeleteRes (sres);
+      return;
    }
 
    // rabbit test 
@@ -296,52 +353,55 @@ void run_test(int itype, const char * rng_name) {
       TestRng_BigCrush<ROOT::Math::RanLuxDEngine>("New Ranlux48 version (Lx=2)",2);
       break;
    case 14:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine<8,0>>("MiMaxEngine 8 skip 0");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<8,0>>("MixMax 8 skip 0");
       break;      
    case 15:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine<10,4>>("MiMaxEngine 10 skip 4");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<10,4>>("MixMax 10 skip 4");
       break;      
    case 16:
       TestRng_BigCrush<ROOT::Math::RanLuxPPEngine>("RanLux++ Engine");
       break;
    case 17:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine44851>("Mixmax 44851 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine44851>("MixMax 44851 Engine");
       break;
    case 18:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine<256,0>>("Mixmax 256-S0 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<256,0>>("MixMax 256-S0 Engine");
       break;
    case 19:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine<16,0>>("Mixmax 16 skip 0 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<16,0>>("MixMax 16 skip 0 Engine");
       break;
    case 20:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine<44,0>>("Mixmax 44 skip 0 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<44,0>>("MixMax 44 skip 0 Engine");
       break;
    case 21:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine<88,0>>("Mixmax 88 skip 0 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<88,0>>("MixMax 88 skip 0 Engine");
       break;
    case 22:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine<10,14>>("Mixmax 10 skip 14 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<10,14>>("MixMax 10 skip 14 Engine");
       break;
    case 23:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine<16,11>>("Mixmax 16 skip 11 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<16,11>>("MixMax 16 skip 11 Engine");
       break;
    case 24:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine<44,8>>("Mixmax 44 skip 8 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<44,8>>("MixMax 44 skip 8 Engine");
       break;
    case 25:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine<88,6>>("Mixmax 88 skip 6 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<88,6>>("MixMax 88 skip 6 Engine");
       break;
    case 26:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine<256,5>>("Mixmax 256 skip 5 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<256,5>>("MixMax 256 skip 5 Engine");
       break;
    case 27:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine<1000,4>>("Mixmax 1000 skip 4 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<1000,4>>("MixMax 1000 skip 4 Engine");
       break;
    case 28:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine<10,0>>("Mixmax 10 skip 0 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<10,0>>("MixMax 10 skip 0 Engine");
       break;
    case 29:
-      TestRng_BigCrush<ROOT::Math::MixMaxEngine<10,2>>("Mixmax 10 skip 2 Engine");
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<10,1>>("MixMax 10 skip 1 Engine");
+      break;
+   case 30:
+      TestRng_BigCrush<ROOT::Math::MixMaxEngine<10,2>>("MixMax 10 skip 2 Engine");
       break;
       
    default:
@@ -361,7 +421,7 @@ int main(int argc, char **argv)
                                     "MIXMAX16-0","MIXMAX44-0","MIXMAX88-0",
                                     "MIXMAX10-14","MIXMAX16-11","MIXMAX44-8","MIXMAX88-6",
                                     "MIXMAX256-5","MIXMAX1000-4",
-                                    "MIXMAX10-0","MIXMAX10-2"
+                                    "MIXMAX10-0","MIXMAX10-1","MIXMAX10-2"
                                     };
 
    int itype = -1;
@@ -409,6 +469,7 @@ int main(int argc, char **argv)
          if (testName.Contains("smarsa")) run_smarsa = true; 
          if (testName.Contains("swalk")) run_swalk = true; 
          if (testName.Contains("sknuth")) run_sknuth = true; 
+         if (testName.Contains("smultin")) run_smultin = true; 
       }
       if (arg.Contains("-N=")) {  // get number of n values to generate (to be used when a single test is run)
          TString n_str = arg(arg.First("=")+1,arg.Length());

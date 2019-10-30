@@ -30,10 +30,19 @@ struct TRng {
       return fgEngine->Rndm(); 
    }
    static double Rndm3() {
-      double val =  fgEngine->Rndm(); 
-      while (fgCounter % fgMaxEvt != 0) {
+      const int SIZE=8;
+      double val =  fgEngine->Rndm();
+      fgCounter++;      
+//      while ( (fgCounter % fgMaxEvt) != 0) {
+//      while ( (fgCounter <= 1 ) ) { // || (fgCounter >6 && fgCounter < 8) ) ) {
+//      while ( ( fgCounter <= 3 ) || (fgCounter >= 6 && fgCounter <= 10  ) || (fgCounter >= 14 && fgCounter <= 16)) { // || (fgCounter >6 && fgCounter < 8) ) ) {
+      while ( ( fgCounter <= 3 ) ) {
          val = fgEngine->Rndm();
          fgCounter++;
+         if (fgCounter == 2*SIZE) fgCounter = 0; 
+      }
+      if (fgCounter == 2*SIZE) {
+         fgCounter = 0;
       }
       return val; 
    }
